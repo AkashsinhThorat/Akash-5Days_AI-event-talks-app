@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigQuery Release Notes Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="https://ssl.gstatic.com/analytics/20220921/analytics/favicon.ico">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="header-left">
+                <h1>BigQuery Releases <span class="logo-tag">Hub</span></h1>
+                <p>Track, filter, and share Google BigQuery platform updates in real time</p>
+            </div>
+            <div class="header-actions">
+                <div class="last-updated">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    Fetched: <span class="time-value" id="last-fetched-time">Loading...</span>
+                </div>
+                <button class="btn btn-primary" id="refresh-btn">
+                    <svg class="refresh-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                    </svg>
+                    <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="2" x2="12" y2="6"></line>
+                        <line x1="12" y1="18" x2="12" y2="22"></line>
+                        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                        <line x1="2" y1="12" x2="6" y2="12"></line>
+                        <line x1="18" y1="12" x2="22" y2="12"></line>
+                        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                    </svg>
+                    <span>Refresh</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Filters and Search -->
+        <section class="filter-bar">
+            <div class="search-wrapper">
+                <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" class="search-input" id="search-box" placeholder="Search updates (e.g. Gemini, external tables)...">
+            </div>
+            
+            <div class="filter-chips" id="filter-chips-container">
+                <button class="chip active" data-filter="all">All <span class="chip-count" id="count-all">0</span></button>
+                <button class="chip" data-filter="feature">Features <span class="chip-count" id="count-feature">0</span></button>
+                <button class="chip" data-filter="announcement">Announcements <span class="chip-count" id="count-announcement">0</span></button>
+                <button class="chip" data-filter="issue">Issues <span class="chip-count" id="count-issue">0</span></button>
+                <button class="chip" data-filter="deprecation">Deprecations <span class="chip-count" id="count-deprecation">0</span></button>
+                <button class="chip" data-filter="other">Others <span class="chip-count" id="count-other">0</span></button>
+            </div>
+        </section>
+
+        <!-- Release Notes Cards Feed -->
+        <main class="notes-container" id="notes-feed">
+            <!-- Dynamic note cards go here -->
+            <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                <h3>Fetching Release Notes</h3>
+                <p>Connecting to Google Cloud feed to download the latest BigQuery release details...</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Floating Actions Bar (Reveals when items are selected) -->
+    <div class="floating-bar" id="floating-action-bar">
+        <div class="floating-text">
+            Selected <span id="selected-count">0</span> update(s) to share
+        </div>
+        <div class="floating-actions">
+            <button class="btn btn-secondary" id="clear-selection-btn">Clear</button>
+            <button class="btn btn-primary btn-twitter" id="tweet-bulk-btn">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                <span>Draft Tweet</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Tweeter Draft Composer Modal -->
+    <div class="tweet-modal" id="tweet-dialog">
+        <div class="modal-backdrop" id="modal-backdrop-el"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>
+                    <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24" style="color: var(--accent-twitter)">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                    Draft Update Tweet
+                </h2>
+                <button class="modal-close" id="modal-close-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="composer-preview-card">
+                <span class="preview-title">Selected Content Preview</span>
+                <p id="tweet-preview-text">Preview content goes here...</p>
+            </div>
+
+            <div class="tweet-textarea-wrapper">
+                <textarea class="tweet-textarea" id="tweet-text-input" placeholder="Draft your tweet here..."></textarea>
+                <div class="char-counter" id="tweet-char-counter">0 / 280</div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modal-cancel-btn">Cancel</button>
+                <button class="btn btn-twitter" id="modal-share-btn">
+                    <span>Tweet This</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toast-bin"></div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
