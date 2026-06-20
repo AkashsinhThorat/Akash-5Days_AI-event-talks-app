@@ -58,7 +58,7 @@ python --version
 
 1. **Clone or Navigate to the Directory**:
    ```powershell
-   cd C:\Users\akash\agy-cli-projects\bq-releases-notes
+   cd bq-releases-notes
    ```
 
 2. **Set up Virtual Environment**:
