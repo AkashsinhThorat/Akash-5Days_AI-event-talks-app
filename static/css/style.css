@@ -816,3 +816,107 @@ header {
         bottom: 1rem;
     }
 }
+
+/* Light Mode Overrides */
+body.light-mode {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.8);
+    --bg-card-hover: rgba(255, 255, 255, 0.95);
+    --border-color: rgba(0, 0, 0, 0.08);
+    --border-hover: rgba(99, 102, 241, 0.4);
+    
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+    
+    --glow-blue: 0 0 20px rgba(56, 189, 248, 0.08);
+    --glow-purple: 0 0 20px rgba(168, 85, 247, 0.08);
+}
+
+/* Adjust components for light mode */
+body.light-mode .search-input {
+    background: rgba(0, 0, 0, 0.02);
+    color: #0f172a;
+}
+body.light-mode .search-input:focus {
+    background: rgba(0, 0, 0, 0.04);
+}
+body.light-mode .chip {
+    background: rgba(0, 0, 0, 0.02);
+    color: #334155;
+}
+body.light-mode .chip:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+body.light-mode .chip.active {
+    background: rgba(99, 102, 241, 0.08);
+    color: #4f46e5;
+    border-color: rgba(99, 102, 241, 0.3);
+}
+body.light-mode .chip-count {
+    background: rgba(0, 0, 0, 0.05);
+    color: #64748b;
+}
+body.light-mode .chip.active .chip-count {
+    background: rgba(99, 102, 241, 0.15);
+    color: #4f46e5;
+}
+body.light-mode .card-body code {
+    background: rgba(0, 0, 0, 0.05);
+    color: #0f172a;
+}
+body.light-mode .card-select-btn {
+    background: rgba(0, 0, 0, 0.02);
+}
+body.light-mode .note-card.selected .card-select-btn {
+    background: var(--accent-purple);
+    color: #ffffff;
+}
+
+/* Adjust Modal for light mode */
+body.light-mode .modal-content {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+body.light-mode .modal-header h2 {
+    color: #0f172a;
+}
+body.light-mode .composer-preview-card {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+body.light-mode .composer-preview-card p {
+    color: #334155;
+}
+body.light-mode .tweet-textarea {
+    background: rgba(0, 0, 0, 0.02);
+    color: #0f172a;
+}
+body.light-mode .char-counter {
+    background: rgba(0, 0, 0, 0.05);
+    color: #64748b;
+}
+body.light-mode .toast {
+    background: rgba(255, 255, 255, 0.95);
+    color: #0f172a;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Adjust header and text colors */
+body.light-mode .header-left h1 {
+    background: linear-gradient(135deg, #0f172a 40%, #a855f7 70%, #0284c7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+body.light-mode .last-updated {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+/* Toggle icon display swapping */
+body.light-mode .sun-icon {
+    display: none !important;
+}
+body.light-mode .moon-icon {
+    display: block !important;
+}

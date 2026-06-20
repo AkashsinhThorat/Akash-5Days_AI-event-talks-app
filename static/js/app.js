@@ -3,6 +3,12 @@ let allNotes = [];
 let filteredNotes = [];
 let selectedNotes = new Set(); // Stores note IDs
 
+// Load saved theme on page load
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'light') {
+    document.body.classList.add('light-mode');
+}
+
 // DOM Elements
 const notesFeed = document.getElementById('notes-feed');
 const searchBox = document.getElementById('search-box');
@@ -10,6 +16,7 @@ const filterChipsContainer = document.getElementById('filter-chips-container');
 const lastFetchedTime = document.getElementById('last-fetched-time');
 const refreshBtn = document.getElementById('refresh-btn');
 const exportCsvBtn = document.getElementById('export-csv-btn');
+const themeToggleBtn = document.getElementById('theme-toggle');
 const floatingActionBar = document.getElementById('floating-action-bar');
 const selectedCountEl = document.getElementById('selected-count');
 const clearSelectionBtn = document.getElementById('clear-selection-btn');
@@ -521,6 +528,13 @@ function init() {
     
     // Export CSV button click
     exportCsvBtn.addEventListener('click', exportToCsv);
+    
+    // Theme toggle click
+    themeToggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    });
     
     // Load initial data
     loadNotes();
