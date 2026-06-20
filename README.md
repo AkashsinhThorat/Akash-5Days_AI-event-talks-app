@@ -9,9 +9,12 @@ A modern, responsive, and lightweight web application built using Python Flask a
 - **📡 Live XML Parsing**: Automatically retrieves and parses the Google Cloud BigQuery Atom XML feed (`https://docs.cloud.google.com/feeds/bigquery-release-notes.xml`).
 - **🧩 Granular Sub-updates**: Smart-splits aggregated daily updates (grouped dates) into separate, individual cards based on release headers.
 - **⚡ In-Memory Caching & Spinner Refresh**: Caches results to ensure instantaneous page loads. Instantly refresh live details using the **Refresh** action button (complete with loading spinner).
-- **🎨 Glassmorphism Aesthetic**: Sleek and premium dark mode design utilizing visual highlights, custom typography (Outfit & Plus Jakarta Sans), and vibrant tag colors for different update types.
-- **🔍 Instant Search & Category Filter**: Live filter chips to filter by categories: `Features`, `Announcements`, `Issues`, `Deprecations`, and `Others`, coupled with real-time text search.
-- **🐦 Direct Twitter/X Sharing**: Tactile selection bar lets you choose individual updates to generate a pre-formatted tweet, including automatic text-truncation (safeguarding the 280-character limit) and hashtag inclusions.
+- **🎨 Dark & Light Theme Swapper**: Toggle switch in the header that swaps color schemes by overriding CSS variables. Remembers your choice on reload via `localStorage`.
+- **📋 Copy to Clipboard**: Quickly copy clean plain-text release summaries directly from individual cards or draft outputs using dedicated **Copy** and **Copy Draft** buttons.
+- **📊 CSV Exporter**: Easily download your selected release notes or the currently filtered search results in a structured tabular CSV format.
+- **🔍 Instant Search & Category Filter**: Live filter chips to filter by categories (`Features`, `Announcements`, `Issues`, `Deprecations`, `Others`) coupled with real-time text search.
+- **🐦 Direct Twitter/X Sharing**: Tactile selection bar lets you choose updates to generate a formatted tweet, tracking character limits dynamically.
+- **♿ Accessibility & Micro-animations**: Focus indicators and keydown navigation handlers for keyboard-friendly operations, combined with organic delayed entrance slide-in card animations.
 - **🧪 Unit Tested**: Solid XML parsing and HTML sanitization modules backed by automated Python tests.
 
 ---
