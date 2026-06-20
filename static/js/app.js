@@ -27,6 +27,7 @@ const tweetDialog = document.getElementById('tweet-dialog');
 const modalBackdrop = document.getElementById('modal-backdrop-el');
 const modalCloseBtn = document.getElementById('modal-close-btn');
 const modalCancelBtn = document.getElementById('modal-cancel-btn');
+const modalCopyDraftBtn = document.getElementById('modal-copy-draft-btn');
 const modalShareBtn = document.getElementById('modal-share-btn');
 const tweetPreviewText = document.getElementById('tweet-preview-text');
 const tweetTextInput = document.getElementById('tweet-text-input');
@@ -166,26 +167,44 @@ function renderNotes() {
     
     if (filteredNotes.length === 0) {
         notesFeed.innerHTML = `
-            <div class="empty-state">
+            <div class="empty-state" style="animation: fadeInUp 0.4s ease both;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
                 <h3>No updates found</h3>
                 <p>Try clearing your search query or choosing a different filter category.</p>
+                <button class="btn btn-secondary btn-sm" id="empty-state-reset-btn" style="margin-top: 0.5rem; border-radius: var(--radius-md);">
+                    Clear Search & Filters
+                </button>
             </div>
         `;
+        
+        const resetBtn = document.getElementById('empty-state-reset-btn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                searchBox.value = '';
+                filterChipsContainer.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                const allChip = filterChipsContainer.querySelector('[data-filter="all"]');
+                if (allChip) allChip.classList.add('active');
+                renderNotes();
+            });
+        }
         return;
     }
     
     // Create elements
-    filteredNotes.forEach(note => {
+    filteredNotes.forEach((note, idx) => {
         const isSelected = selectedNotes.has(note.id);
         const typeClass = getBadgeClass(note.type);
         
         const card = document.createElement('article');
         card.className = `note-card ${isSelected ? 'selected' : ''}`;
         card.dataset.id = note.id;
+        card.style.animationDelay = `${idx * 0.03}s`;
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'checkbox');
+        card.setAttribute('aria-checked', isSelected ? 'true' : 'false');
         
         card.innerHTML = `
             <div class="card-header">
@@ -261,6 +280,14 @@ function renderNotes() {
             toggleSelectNote(note.id);
         });
         
+        // Keyboard support for selecting cards (A11y)
+        card.addEventListener('keydown', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                toggleSelectNote(note.id);
+            }
+        });
+        
         notesFeed.appendChild(card);
     });
 }
@@ -287,6 +314,7 @@ function toggleSelectNote(id) {
     const card = document.querySelector(`.note-card[data-id="${id}"]`);
     if (card) {
         card.classList.toggle('selected');
+        card.setAttribute('aria-checked', selectedNotes.has(id) ? 'true' : 'false');
     }
     
     updateFloatingBar();
@@ -525,6 +553,20 @@ function init() {
     modalBackdrop.addEventListener('click', closeTweetModal);
     tweetTextInput.addEventListener('input', updateCharCount);
     modalShareBtn.addEventListener('click', submitTweet);
+    
+    // Copy drafted tweet text inside modal
+    modalCopyDraftBtn.addEventListener('click', () => {
+        const text = tweetTextInput.value;
+        if (!text) return;
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('Draft copied to clipboard!');
+            closeTweetModal();
+            clearSelection();
+        }).catch(err => {
+            console.error('Failed to copy draft: ', err);
+            showToast('Failed to copy draft text.', 'error');
+        });
+    });
     
     // Export CSV button click
     exportCsvBtn.addEventListener('click', exportToCsv);
